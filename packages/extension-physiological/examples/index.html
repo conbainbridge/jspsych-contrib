@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jsPsychExtensionPhysiological Example</title>
+    <script src="https://unpkg.com/jspsych"></script>
+    <!-- Load the published extension package here, e.g.
+<script src="https://unpkg.com/extension-physiological"></script>
+<script src="../dist/index.global.js"></script> -->
+    <!-- Example plugin an extension may work with -->
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <script src="../dist/index.browser.js"></script>
+    <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" />
+  </head>
+  
+  <body>
+    <script>
+      const jsPsych = initJsPsych({
+        extensions: [{ type: jsPsychExtensionPhysiological }],
+      });
+
+      const trial = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Hello world",
+        extensions: [{ type: jsPsychExtensionPhysiological },
+        ],
+      };
+
+      jsPsych.run([trial]);
+    </script>
+  </body>
+</html>
