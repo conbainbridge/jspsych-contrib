@@ -50,9 +50,9 @@ class PhysiologicalExtension implements JsPsychExtension {
 
   on_load = (): void => {};
 
- on_finish = (): Promise<{ [key: string]: any }> => {
+on_finish = (): Promise<{ [key: string]: any }> => {
   const trialEndTime = new Date(); // now
-  const trialStartTime = new Date(trialEndTime.getTime() - 1000 * 10); // e.g., 10s ago
+  const trialStartTime = new Date(trialEndTime.getTime() - 1000 * 60 * 30); // 5 minutes earlier
 
   const pad = (n: number) => n.toString().padStart(2, "0");
   const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
