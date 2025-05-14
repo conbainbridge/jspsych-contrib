@@ -50,46 +50,50 @@ class PhysiologicalExtension implements JsPsychExtension {
 
   on_load = (): void => {};
 
-on_finish = (): Promise<{ [key: string]: any }> => {
-  const trialEndTime = new Date(); // now
-  const trialStartTime = new Date(trialEndTime.getTime() - 1000 * 60 * 30); // 5 minutes earlier
+  on_finish = (): Promise<{ [key: string]: any }> => {
+    const trialEndTime = new Date(); // now
+    const trialStartTime = new Date(trialEndTime.getTime() - 1000 * 60 * 30); // 5 minutes earlier
 
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  const formatDate = (d: Date) => d.toISOString().split("T")[0];
+    // const trialStartTime = new Date(trialEndTime.getTime() - trialEndTime.getTime());; // testing longer range
 
-  const startTime = formatTime(trialStartTime);
-  const endTime = formatTime(trialEndTime);
-  const date = formatDate(trialEndTime);
+    console.log("Test time: " + trialStartTime);
 
-  const profileUrl = "http://localhost:3000/fitbit-profile";
-  const heartUrl = `http://localhost:3000/fitbit-heart?date=${date}&startTime=${startTime}&endTime=${endTime}`;
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
-  return Promise.all([
-    fetch(profileUrl).then((res) => res.json()),
-    fetch(heartUrl).then((res) => res.json()),
-  ])
-    .then(([profileData, heartRateData]) => {
-      console.log("Fitbit profile:", profileData);
-      console.log("Fitbit heart rate:", heartRateData);
+    const startTime = formatTime(trialStartTime);
+    const endTime = formatTime(trialEndTime);
+    const date = formatDate(trialEndTime);
 
-      return {
-        data1: 99,
-        data2: "hello world!",
-        profile: profileData,
-        heartrate: heartRateData,
-        heart_rate_window: { startTime, endTime, date },
-      };
-    })
-    .catch((error: any) => {
-      console.error("Error fetching Fitbit data:", error);
-      return {
-        data1: 99,
-        data2: "hello world!",
-        error: error.message,
-      };
-    });
-};
+    const profileUrl = "http://localhost:3000/fitbit-profile";
+    const heartUrl = `http://localhost:3000/fitbit-heart?date=${date}&startTime=${startTime}&endTime=${endTime}`;
+
+    return Promise.all([
+      fetch(profileUrl).then((res) => res.json()),
+      fetch(heartUrl).then((res) => res.json()),
+    ])
+      .then(([profileData, heartRateData]) => {
+        console.log("Fitbit profile:", profileData);
+        console.log("Fitbit heart rate:", heartRateData);
+
+        return {
+          data1: 99,
+          data2: "hello world!",
+          profile: profileData,
+          heartrate: heartRateData,
+          heart_rate_window: { startTime, endTime, date },
+        };
+      })
+      .catch((error: any) => {
+        console.error("Error fetching Fitbit data:", error);
+        return {
+          data1: 99,
+          data2: "hello world!",
+          error: error.message,
+        };
+      });
+  };
 }
 
 export default PhysiologicalExtension;
