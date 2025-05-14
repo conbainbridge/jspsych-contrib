@@ -16,6 +16,9 @@
     <script>
       const jsPsych = initJsPsych({
         extensions: [{ type: jsPsychExtensionPhysiological }],
+        on_finish: () => {
+          jsPsych.data.displayData();
+        }
       });
 
       const hello = {
