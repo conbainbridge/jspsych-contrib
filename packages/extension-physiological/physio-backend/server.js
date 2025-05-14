@@ -34,6 +34,29 @@ app.get("/fitbit-profile", async (req, res) => {
   }
 });
 
+// Route to fetch heart rate data from Fitbit
+app.get("/fitbit-heart", async (req, res) => {
+  const { date, startTime, endTime } = req.query;
+
+  const useDate = date || new Date().toISOString().split("T")[0];
+
+  try {
+    const response = await axios.get(
+      `https://api.fitbit.com/1/user/-/activities/heart/date/${useDate}/${useDate}/1sec/time/${startTime}/${endTime}.json`,
+      {
+        headers: {
+          Authorization: `Bearer ${FITBIT_ACCESS_TOKEN}`,
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    console.error("Error fetching heart rate data:", err.response?.data || err.message);
+    res.status(500).json({ error: "Failed to fetch heart rate data" });
+  }
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Fitbit API proxy server running at http://localhost:${PORT}`);
