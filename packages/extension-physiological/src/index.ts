@@ -61,7 +61,7 @@ class PhysiologicalExtension implements JsPsychExtension {
         headers: {
           Accept: "application/json",
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1FITlgiLCJzdWIiOiJDTFo4WFQiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJlY2MgcnNldCByaXJuIHJveHkgcm51dCBycHJvIHJzbGUgcmNmIHJhY3QgcnJlcyBybG9jIHJ3ZWkgcmhyIHJ0ZW0iLCJleHAiOjE3NDcxOTcxOTksImlhdCI6MTc0NzE2ODM5OX0.iJ7QG16sAJWOnYlAhQM9Yolha6QM2CwOF_UyFS0REz4",
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1FITlgiLCJzdWIiOiJDTFo4WFQiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJlY2cgcnNldCByaXJuIHJveHkgcm51dCBycHJvIHJzbGUgcmNmIHJhY3QgcnJlcyBybG9jIHJ3ZWkgcmhyIHJ0ZW0iLCJleHAiOjE3NDcyNjQyODAsImlhdCI6MTc0NzIzNTQ4MH0.WT1nWy5MPFDpqhn-rEdODkHKCuzJNR2KIbt4hMlEUTs",
         },
       }
     )

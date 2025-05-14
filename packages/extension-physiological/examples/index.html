@@ -18,6 +18,11 @@
         extensions: [{ type: jsPsychExtensionPhysiological }],
       });
 
+      const hello = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Hiiii bro"
+      };
+
       const trial = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: "Hello world",
@@ -25,7 +30,7 @@
         ],
       };
 
-      jsPsych.run([trial]);
+      jsPsych.run([hello, trial]);
     </script>
   </body>
 </html>
