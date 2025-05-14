@@ -59,5 +59,5 @@ app.get("/fitbit-heart", async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Fitbit API proxy server running at http://localhost:${PORT}`);
+  console.log(`Fitbit API proxy server is running at http://localhost:${PORT}`);
 });
