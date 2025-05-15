@@ -15,7 +15,7 @@ app.use(
 
 // Your Fitbit API Access Token (replace with actual token)
 const FITBIT_ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1FITlgiLCJzdWIiOiJDTFo4WFQiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJlY2cgcnNldCByaXJuIHJveHkgcm51dCBycHJvIHJzbGUgcmNmIHJhY3QgcnJlcyBybG9jIHJ3ZWkgcmhyIHJ0ZW0iLCJleHAiOjE3NDcyNjQyODAsImlhdCI6MTc0NzIzNTQ4MH0.WT1nWy5MPFDpqhn-rEdODkHKCuzJNR2KIbt4hMlEUTs";
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1FIUDYiLCJzdWIiOiJDTFo4WFQiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd251dCB3cHJvIHdzbGUgd2VjZyB3c29jIHdhY3Qgd294eSB3dGVtIHd3ZWkgd2lybiB3Y2Ygd3NldCB3bG9jIHdyZXMiLCJleHAiOjE3NDczNDQ5ODEsImlhdCI6MTc0NzMxNjE4MX0.fwOgOqTMgts6zk5DrRuUQcBmggVsf99Dy1xtbmLnvkg";
 
 // Route to fetch profile from Fitbit
 app.get("/fitbit-profile", async (req, res) => {
