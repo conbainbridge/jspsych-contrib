@@ -23,7 +23,9 @@
 
       const hello = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: "Hiiii bro"
+        stimulus: "Hiiii bro",
+        extensions: [{ type: jsPsychExtensionPhysiological },
+        ],
       };
 
       const trial = {

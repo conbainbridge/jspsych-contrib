@@ -38,6 +38,11 @@ class PhysiologicalExtension implements JsPsychExtension {
 
   constructor(private jsPsych: JsPsych) {}
 
+  private trialStartTime: Date | null = null;
+  private trialEndTime: Date | null = null;
+
+  private trialTimingLog: { trial: number; start: Date; end?: Date }[] = [];
+
   initialize = ({}: InitializeParameters): Promise<void> => {
     return new Promise((resolve, reject) => {
       resolve();
@@ -45,55 +50,64 @@ class PhysiologicalExtension implements JsPsychExtension {
   };
 
   on_start = (): void => {
-    return;
-  };
+  const trialIndex = this.jsPsych.getProgress().current_trial_global;
+  this.trialStartTime = new Date();
+
+  this.trialTimingLog.push({
+    trial: trialIndex,
+    start: this.trialStartTime,
+  });
+};
 
   on_load = (): void => {};
 
   on_finish = (): Promise<{ [key: string]: any }> => {
-    const trialEndTime = new Date(); // now
-    const trialStartTime = new Date(trialEndTime.getTime() - 1000 * 60 * 30); // 5 minutes earlier
+  this.trialEndTime = new Date(); // capture end time
 
-    // const trialStartTime = new Date(trialEndTime.getTime() - trialEndTime.getTime());; // testing longer range
+  if (this.trialTimingLog.length > 0) {
+    this.trialTimingLog[this.trialTimingLog.length - 1].end = this.trialEndTime;
+  }
 
-    console.log("Test time: " + trialStartTime);
+  const trialStartTime = this.trialStartTime || new Date(this.trialEndTime.getTime() - 1000 * 60 * 5); // fallback: 5 min earlier
 
-    const pad = (n: number) => n.toString().padStart(2, "0");
-    const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    const formatDate = (d: Date) => d.toISOString().split("T")[0];
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
-    const startTime = formatTime(trialStartTime);
-    const endTime = formatTime(trialEndTime);
-    const date = formatDate(trialEndTime);
+  const startTime = formatTime(trialStartTime);
+  const endTime = formatTime(this.trialEndTime);
+  const date = formatDate(this.trialEndTime);
 
-    const profileUrl = "http://localhost:3000/fitbit-profile";
-    const heartUrl = `http://localhost:3000/fitbit-heart?date=${date}&startTime=${startTime}&endTime=${endTime}`;
+  const profileUrl = "http://localhost:3000/fitbit-profile";
+  const heartUrl = `http://localhost:3000/fitbit-heart?date=${date}&startTime=${startTime}&endTime=${endTime}`;
 
-    return Promise.all([
-      fetch(profileUrl).then((res) => res.json()),
-      fetch(heartUrl).then((res) => res.json()),
-    ])
-      .then(([profileData, heartRateData]) => {
-        console.log("Fitbit profile:", profileData);
-        console.log("Fitbit heart rate:", heartRateData);
+  return Promise.all([
+    fetch(profileUrl).then((res) => res.json()),
+    fetch(heartUrl).then((res) => res.json()),
+  ])
+    .then(([profileData, heartRateData]) => {
+      console.log("Fitbit profile:", profileData);
+      console.log("Fitbit heart rate:", heartRateData);
 
-        return {
-          data1: 99,
-          data2: "hello world!",
-          profile: profileData,
-          heartrate: heartRateData,
-          heart_rate_window: { startTime, endTime, date },
-        };
-      })
-      .catch((error: any) => {
-        console.error("Error fetching Fitbit data:", error);
-        return {
-          data1: 99,
-          data2: "hello world!",
-          error: error.message,
-        };
-      });
-  };
+      return {
+        data1: 99,
+        data2: "hello world!",
+        profile: profileData,
+        heartrate: heartRateData,
+        heart_rate_window: { startTime, endTime, date },
+        timing_log_snapshot: this.trialTimingLog,
+      };
+    })
+    .catch((error: any) => {
+      console.error("Error fetching Fitbit data:", error);
+      return {
+        data1: 99,
+        data2: "hello world!",
+        error: error.message,
+        timing_log_snapshot: this.trialTimingLog,
+      };
+    });
+};
 }
 
 export default PhysiologicalExtension;
