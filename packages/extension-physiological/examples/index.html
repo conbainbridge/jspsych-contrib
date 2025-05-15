@@ -8,6 +8,7 @@
 <script src="../dist/index.global.js"></script> -->
     <!-- Example plugin an extension may work with -->
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response"></script>
     <script src="../dist/index.browser.js"></script>
     <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" />
   </head>
@@ -35,7 +36,61 @@
         ],
       };
 
-      jsPsych.run([hello, trial]);
+const waitTrial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: () => {
+    return `
+      <div id="countdown" style="font-size:32px; margin-bottom: 20px;">15:00</div>
+      <p>Please leave this tab open while we collect your heart rate data from Fitbit.</p>
+    `;
+  },
+  choices: [], // no button
+  trial_duration: 15 * 60 * 1000, // 15 minutes
+  on_load: () => {
+    let time = 15 * 60;
+    const countdownEl = document.getElementById("countdown");
+    const interval = setInterval(() => {
+      time--;
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      countdownEl.innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      if (time <= 0) clearInterval(interval);
+    }, 1000);
+  },
+  on_finish: async () => {
+    const trials = jsPsych.data.get().filter({ trial_type: "html-keyboard-response" }).values();
+
+    for (let trial of trials) {
+      const window = trial.heart_rate_window;
+      if (!window) continue;
+
+      const url = `http://localhost:3000/fitbit-heart?date=${window.date}&startTime=${window.startTime}&endTime=${window.endTime}`;
+
+      try {
+        const response = await fetch(url);
+        const heartData = await response.json();
+
+        // Attach heart data to matching trial
+        jsPsych.data.get().filter({ trial_index: trial.trial_index }).addToAll({
+          heart_rate_data: heartData
+        });
+      } catch (e) {
+        console.error("HR fetch failed:", e);
+        jsPsych.data.get().filter({ trial_index: trial.trial_index }).addToAll({
+          heart_rate_error: e.message
+        });
+      }
+    }
+  }
+};
+
+const thankYou = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: "All data has been collected. Thank you!",
+  choices: ["Finish"]
+};
+
+      jsPsych.run([hello, trial, waitTrial, thankYou]);
     </script>
   </body>
 </html>
